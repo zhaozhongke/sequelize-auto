@@ -1,32 +1,32 @@
 #!/usr/bin/env node
 
 var sequelizeAuto = require('../')
-  , path = require('path');
+    , path = require('path');
 
 var argv = require('optimist')
-  .usage('Usage: sequelize-auto -h <host> -d <database> -u <user> -x [password] -p [port]  --dialect [dialect] -c [/path/to/config] -o [/path/to/models]')
-  .demand(['h', 'd', 'u'])
-  .alias('h', 'host')
-  .alias('d', 'database')
-  .alias('u', 'user')
-  .alias('x', 'pass')
-  .alias('p', 'port')
-  .alias('c', 'config')
-  .alias('o', 'output')
-  .alias('e', 'dialect')
-  .describe('h', 'IP/Hostname for the database.')
-  .describe('d', 'Database name.')
-  .describe('u', 'Username for database.')
-  .describe('x', 'Password for database.')
-  .describe('p', 'Port number for database.')
-  .describe('c', 'JSON file for sending additional options to the Sequelize object.')
-  .describe('o', 'What directory to place the models.')
-  .describe('e', 'The dialect/engine that you\'re using: postgres, mysql, sqlite')
-  .argv;
+    .usage('Usage: sequelize-auto -h <host> -d <database> -u <user> -x [password] -p [port]  --dialect [dialect] -c [/path/to/config] -o [/path/to/models]')
+    .demand(['h', 'd', 'u'])
+    .alias('h', 'host')
+    .alias('d', 'database')
+    .alias('u', 'user')
+    .alias('x', 'pass')
+    .alias('p', 'port')
+    .alias('c', 'config')
+    .alias('o', 'output')
+    .alias('e', 'dialect')
+    .describe('h', 'IP/Hostname for the database.')
+    .describe('d', 'Database name.')
+    .describe('u', 'Username for database.')
+    .describe('x', 'Password for database.')
+    .describe('p', 'Port number for database.')
+    .describe('c', 'JSON file for sending additional options to the Sequelize object.')
+    .describe('o', 'What directory to place the models.')
+    .describe('e', 'The dialect/engine that you\'re using: postgres, mysql, sqlite')
+    .argv;
 
 var configFile = {};
 if (!!argv.c) {
-  configFile = require(path.resolve(argv.c));
+    configFile = require(path.resolve(argv.c));
 }
 
 configFile.dialect = argv.e || configFile.dialect || 'mysql';
@@ -36,7 +36,10 @@ configFile.host = argv.h || configFile.host || 'localhost';
 var auto = new sequelizeAuto(argv.d, argv.u, (argv.x || null), configFile);
 var dir = argv.o || path.resolve(process.cwd() + '/models');
 
-auto.run({spaces: true, indentation: 2, directory: dir}, function(err){
-  if (err) throw err;
-  console.log('Done!');
+auto.run({spaces: true, indentation: 2, directory: dir}, function (err) {
+    if (err) {
+        console.log(err);
+        throw err;
+    }
+    console.log('Done!');
 });
